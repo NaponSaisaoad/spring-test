@@ -132,5 +132,26 @@ public class EmployeeRepositoryTests {
 
     }
 
+    @DisplayName("JUnit test for custom query using JPQL with index")
+    @Test
+    public void giveFirstNameAndLastName_wheFindByJPQL_thenReturnEmployeeObject() {
+
+        Employee employee = Employee.builder()
+                .firstName("Napon")
+                .lastName("Saisaoad")
+                .email("NaponSaisaoad@gmail.com")
+                .build();
+
+        employeeRepository.save(employee);
+        String firstName = "Napon";
+        String lastName = "Saisaoad";
+
+
+        Employee saveEmployee = employeeRepository.findByJPQL(firstName, lastName);
+
+        assertThat(saveEmployee).isNotNull();
+
+    }
+
 
 }
