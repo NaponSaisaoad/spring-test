@@ -123,7 +123,6 @@ public class EmployeeRepositoryTests {
                 .build();
 
         employeeRepository.save(employee);
-
         employeeRepository.delete(employee);
 
         Optional<Employee> employeeOptional = employeeRepository.findById(employee.getId());
@@ -145,7 +144,6 @@ public class EmployeeRepositoryTests {
         String firstName = "Napon";
         String lastName = "Saisaoad";
 
-
         Employee saveEmployee = employeeRepository.findByJPQL(firstName, lastName);
 
         assertThat(saveEmployee).isNotNull();
@@ -166,8 +164,24 @@ public class EmployeeRepositoryTests {
         String firstName = "Napon";
         String lastName = "Saisaoad";
 
-
         Employee saveEmployee = employeeRepository.findByJPQL(firstName, lastName);
+
+        assertThat(saveEmployee).isNotNull();
+    }
+
+    @DisplayName("JUnit test for custom query using native sql with index")
+    @Test
+    public void giveFirstNameAndLastName_wheFindByNativeSQL_thenReturnEmployeeObject() {
+
+        Employee employee = Employee.builder()
+                .firstName("Napon")
+                .lastName("Saisaoad")
+                .email("NaponSaisaoad@gmail.com")
+                .build();
+
+        employeeRepository.save(employee);
+
+        Employee saveEmployee = employeeRepository.findByJPQL(employee.getFirstName(), employee.getLastName());
 
         assertThat(saveEmployee).isNotNull();
     }
