@@ -129,7 +129,6 @@ public class EmployeeRepositoryTests {
         Optional<Employee> employeeOptional = employeeRepository.findById(employee.getId());
 
         assertThat(employeeOptional).isEmpty();
-
     }
 
     @DisplayName("JUnit test for custom query using JPQL with index")
@@ -150,7 +149,27 @@ public class EmployeeRepositoryTests {
         Employee saveEmployee = employeeRepository.findByJPQL(firstName, lastName);
 
         assertThat(saveEmployee).isNotNull();
+    }
 
+
+    @DisplayName("JUnit test for custom query using JPQL name params with index")
+    @Test
+    public void giveFirstNameAndLastName_wheFindByJPQLNameParams_thenReturnEmployeeObject() {
+
+        Employee employee = Employee.builder()
+                .firstName("Napon")
+                .lastName("Saisaoad")
+                .email("NaponSaisaoad@gmail.com")
+                .build();
+
+        employeeRepository.save(employee);
+        String firstName = "Napon";
+        String lastName = "Saisaoad";
+
+
+        Employee saveEmployee = employeeRepository.findByJPQL(firstName, lastName);
+
+        assertThat(saveEmployee).isNotNull();
     }
 
 
