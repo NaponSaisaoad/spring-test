@@ -2,6 +2,8 @@ package net.javaguides.springboottesting.repository;
 
 import net.javaguides.springboottesting.model.Employee;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +18,21 @@ public class EmployeeRepositoryTests {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @DisplayName("JUnit test for save employee operation")
-    @Test
-    public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
+    private Employee employee;
 
-        Employee employee = Employee.builder()
+    @BeforeEach
+    public void setup() {
+        employee = Employee.builder()
                 .firstName("Napon")
                 .lastName("Saisaoad")
                 .email("NaponSaisaoad@gmail.com")
                 .build();
+    }
+
+    @DisplayName("JUnit test for save employee operation")
+    @Test
+    public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
+
 
         Employee employeeSaved = employeeRepository.save(employee);
 
@@ -60,12 +68,6 @@ public class EmployeeRepositoryTests {
     @Test
     public void giveEmployeeObject_whenFindById_thenReturnEmployeeObject() {
 
-        Employee employee = Employee.builder()
-                .firstName("Napon")
-                .lastName("Saisaoad")
-                .email("NaponSaisaoad@gmail.com")
-                .build();
-
         employeeRepository.save(employee);
 
         Employee employeeDB = employeeRepository.findById(employee.getId()).get();
@@ -78,12 +80,6 @@ public class EmployeeRepositoryTests {
     @Test
     public void giveEmployeeObject_whenFindByEmail_thenReturnEmployeeObject() {
 
-        Employee employee = Employee.builder()
-                .firstName("Napon")
-                .lastName("Saisaoad")
-                .email("NaponSaisaoad@gmail.com")
-                .build();
-
         employeeRepository.save(employee);
 
         Employee employeeDB = employeeRepository.findByEmail(employee.getEmail()).get();
@@ -94,12 +90,6 @@ public class EmployeeRepositoryTests {
     @DisplayName("JUnit test for update employee operation")
     @Test
     public void giveEmployeeObject_whenUpdateEmployee_thenReturnEmployeeObject() {
-
-        Employee employee = Employee.builder()
-                .firstName("Napon")
-                .lastName("Saisaoad")
-                .email("NaponSaisaoad@gmail.com")
-                .build();
 
         employeeRepository.save(employee);
 
