@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
+import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,21 +26,25 @@ public class EmployeeServiceTests {
     @InjectMocks
     private EmployeeServiceImpl employeeService;
 
+    private Employee employee;
+
     @BeforeEach
     public void setup(){
+        employee = Employee.builder()
+                .id(1L)
+                .firstName("Napon")
+                .lastName("Saisaoad")
+                .email("NaponSaisaoad@gmail.com")
+                .build();
     }
 
     @DisplayName("JUnit test for for saveEmployee method")
     @Test
     public void givenEmployeeObject_whenSaveEmployee_thenReturnEmployeeObject() {
-      Employee employee = Employee.builder()
-                .firstName("Napon")
-                .lastName("Saisaoad")
-                .email("NaponSaisaoad@gmail.com")
-                .build();
-        BDDMockito.given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
 
-        BDDMockito.given(employeeRepository.save(employee)).willReturn(employee);
+        given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
+
+        given(employeeRepository.save(employee)).willReturn(employee);
 
         Employee saveEmployee = employeeService.saveEmployee(employee);
 
