@@ -13,8 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -114,7 +114,7 @@ public class EmployeeServiceTests {
         Assertions.assertThat(saveEmployee).isNotNull();
     }
 
-    @DisplayName("JUnit test for for UpdateEmployee method")
+    @DisplayName("JUnit test for for updateEmployee method")
     @Test
     public void givenUpdateEmployee_whenGetAllEmployees_thenReturnUpdateEmployee() {
 
@@ -125,5 +125,18 @@ public class EmployeeServiceTests {
         Employee updateEmployee = employeeService.updateEmployee(employee);
 
         Assertions.assertThat(updateEmployee.getEmail()).isEqualTo("NaponSaisaoad@gmail.com");
+    }
+
+    @DisplayName("JUnit test for for deleteEmployee method")
+    @Test
+    public void givenDeleteEmployee_whenGetAllEmployees_thenReturnDeleteEmployee() {
+
+        long employeeId = 1L;
+
+        willDoNothing().given(employeeRepository).deleteById(employeeId);
+
+        employeeService.deleteEmployee(employeeId);
+
+        verify(employeeRepository, times(1)).deleteById(employeeId);
     }
 }
