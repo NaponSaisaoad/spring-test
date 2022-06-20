@@ -102,4 +102,15 @@ public class EmployeeServiceTests {
         Assertions.assertThat(employeeList).isEmpty();
         Assertions.assertThat(employeeList.size()).isEqualTo(0);
     }
+
+    @DisplayName("JUnit test for for getEmployeeById method")
+    @Test
+    public void givenGetByIdEmployee_whenGetAllEmployees_thenReturnGetByIdEmployee() {
+
+        given(employeeRepository.findById(1L)).willReturn(Optional.of(employee));
+
+        Employee saveEmployee = employeeService.getEmployeeById(employee.getId()).get();
+
+        Assertions.assertThat(saveEmployee).isNotNull();
+    }
 }
