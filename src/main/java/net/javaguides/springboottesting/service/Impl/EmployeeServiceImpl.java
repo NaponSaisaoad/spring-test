@@ -35,8 +35,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Optional<Employee> getEmployeeById(long id) {
-        Optional<Employee> employeeOptional = employeeRepository.findById(id);
-        return employeeOptional;
+        return employeeRepository.findById(id);
+    }
+
+    @Override
+    public Employee updateEmployee(Employee employee) {
+        return employeeRepository.save(employee);
     }
 
 }

@@ -113,4 +113,17 @@ public class EmployeeServiceTests {
 
         Assertions.assertThat(saveEmployee).isNotNull();
     }
+
+    @DisplayName("JUnit test for for UpdateEmployee method")
+    @Test
+    public void givenUpdateEmployee_whenGetAllEmployees_thenReturnUpdateEmployee() {
+
+        given(employeeRepository.save(employee)).willReturn(employee);
+        employee.setFirstName("Napon");
+        employee.setEmail("NaponSaisaoad@gmail.com");
+
+        Employee updateEmployee = employeeService.updateEmployee(employee);
+
+        Assertions.assertThat(updateEmployee.getEmail()).isEqualTo("NaponSaisaoad@gmail.com");
+    }
 }
