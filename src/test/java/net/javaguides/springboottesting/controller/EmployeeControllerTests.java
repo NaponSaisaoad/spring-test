@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.BDDMockito.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -51,8 +50,7 @@ public class EmployeeControllerTests {
        ResultActions response = mockMvc.perform(post("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employee)));
-
-        response.andDo(print())
+       response.andDo(print())
                 .andExpect(jsonPath("$.firstName",
                         is(employee.getFirstName())))
                 .andExpect(jsonPath("$.lastName",
@@ -70,7 +68,6 @@ public class EmployeeControllerTests {
         given(employeeService.getAllEmployees()).willReturn(listOfEmployees);
 
         ResultActions response = mockMvc.perform(get("/api/employees"));
-
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", is(listOfEmployees.size())));
@@ -88,7 +85,6 @@ public class EmployeeControllerTests {
         given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
 
         ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
-
         response.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName",
@@ -97,5 +93,16 @@ public class EmployeeControllerTests {
                         is(employee.getLastName())))
                 .andExpect(jsonPath("$.email",
                         is(employee.getEmail())));
+    }
+
+    @Test
+    public void givenInvalidEmployeeId_whenGetAllEmployees_thenReturnEmpty() throws Exception {
+        long employeeId = 1L;
+
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
+
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+        response.andExpect(status().isNotFound())
+                .andDo(print());
     }
 }

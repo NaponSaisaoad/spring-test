@@ -33,4 +33,16 @@ public class EmployeeController {
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") long employeeId) {
         return employeeService.getEmployeeById(employeeId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") long employeeId, @RequestBody Employee employee) {
+        return employeeService.getEmployeeById(employeeId).map(saveEmployee -> {
+            saveEmployee.setFirstName(employee.getFirstName());
+            saveEmployee.setLastName(employee.getLastName());
+            saveEmployee.setEmail(employee.getEmail());
+
+            Employee updateEmployee = employeeService.updateEmployee(saveEmployee);
+            return new ResponseEntity<>(updateEmployee, HttpStatus.OK);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
