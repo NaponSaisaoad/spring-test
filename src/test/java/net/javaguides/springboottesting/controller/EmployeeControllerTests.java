@@ -143,4 +143,32 @@ public class EmployeeControllerTests {
                 .andExpect(jsonPath("$.email",
                         is(updateEmployee.getEmail())));
     }
+
+    @Test
+    public void givenUpdateEmployee_whenGetUpdateEmployees_thenReturn404() throws Exception {
+        long employeeId = 1L;
+        Employee saveEmployee = Employee.builder()
+                .firstName("Napon")
+                .lastName("Saisaoad")
+                .email("NaponSaisaoad@gmail.com")
+                .build();
+
+        Employee updateEmployee = Employee.builder()
+                .firstName("Bunphot")
+                .lastName("Saisaoad")
+                .email("BunphotSaisaoad@gmail.com")
+                .build();
+
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
+
+        given(employeeService.updateEmployee(any(Employee.class)))
+                .willAnswer((invocation) -> invocation.getArgument(0));
+
+        ResultActions response = mockMvc.perform(put("/api/employees/{id}", employeeId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateEmployee)));
+
+        response.andDo(print())
+                .andExpect(status().isNotFound());
+    }
 }
