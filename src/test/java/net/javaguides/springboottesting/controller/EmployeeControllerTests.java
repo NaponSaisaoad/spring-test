@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -73,5 +74,28 @@ public class EmployeeControllerTests {
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", is(listOfEmployees.size())));
+    }
+
+    @Test
+    public void givenEmployeeId_whenGetAllEmployees_thenReturnEmployeeObject() throws Exception {
+        long employeeId = 1L;
+        Employee employee = Employee.builder()
+                .firstName("Napon")
+                .lastName("Saisaoad")
+                .email("NaponSaisaoad@gmail.com")
+                .build();
+
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
+
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName",
+                        is(employee.getFirstName())))
+                .andExpect(jsonPath("$.lastName",
+                        is(employee.getLastName())))
+                .andExpect(jsonPath("$.email",
+                        is(employee.getEmail())));
     }
 }
