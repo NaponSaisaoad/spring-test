@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @WebMvcTest
@@ -56,5 +59,23 @@ public class EmployeeControllerTests {
                         CoreMatchers.is(employee.getEmail())));
 
     }
+
+    @Test
+    public void givenListOfEmployees_whenGetAllEmployees_thenReturnEmployeesList() throws Exception {
+
+        List<Employee> listOfEmployees = new ArrayList<>();
+        listOfEmployees.add(Employee.builder().firstName("Napon").lastName("Saisaoad").email("NaponSaisaoad@gmail.com").build());
+        listOfEmployees.add(Employee.builder().firstName("Bunphot").lastName("Saisaoad").email("BunphotSaisaoad@gmail.com").build());
+        BDDMockito.given(employeeService.getAllEmployees()).willReturn(listOfEmployees);
+
+        ResultActions response = mockMvc.perform(get("/api/employees"));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", CoreMatchers.is(listOfEmployees.size())));
+
+
+    }
+
 
 }
