@@ -50,6 +50,7 @@ public class EmployeeControllerTests {
        ResultActions response = mockMvc.perform(post("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(employee)));
+
        response.andDo(print())
                 .andExpect(jsonPath("$.firstName",
                         is(employee.getFirstName())))
@@ -68,13 +69,14 @@ public class EmployeeControllerTests {
         given(employeeService.getAllEmployees()).willReturn(listOfEmployees);
 
         ResultActions response = mockMvc.perform(get("/api/employees"));
+
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", is(listOfEmployees.size())));
     }
 
     @Test
-    public void givenEmployeeId_whenGetAllEmployees_thenReturnEmployeeObject() throws Exception {
+    public void givenEmployeeId_whenGetEmployeesId_thenReturnEmployeeObject() throws Exception {
         long employeeId = 1L;
         Employee employee = Employee.builder()
                 .firstName("Napon")
@@ -85,6 +87,7 @@ public class EmployeeControllerTests {
         given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
 
         ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
         response.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName",
@@ -96,13 +99,48 @@ public class EmployeeControllerTests {
     }
 
     @Test
-    public void givenInvalidEmployeeId_whenGetAllEmployees_thenReturnEmpty() throws Exception {
+    public void givenInvalidEmployee_whenGetEmployeesId_thenReturnEmpty() throws Exception {
         long employeeId = 1L;
 
         given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
 
         ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
         response.andExpect(status().isNotFound())
                 .andDo(print());
+    }
+
+    @Test
+    public void givenUpdateEmployee_whenGetUpdateEmployees_thenReturnUpdateEmployeeObject() throws Exception {
+        long employeeId = 1L;
+        Employee saveEmployee = Employee.builder()
+                .firstName("Napon")
+                .lastName("Saisaoad")
+                .email("NaponSaisaoad@gmail.com")
+                .build();
+
+        Employee updateEmployee = Employee.builder()
+                .firstName("Bunphot")
+                .lastName("Saisaoad")
+                .email("BunphotSaisaoad@gmail.com")
+                .build();
+
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(saveEmployee));
+
+        given(employeeService.updateEmployee(any(Employee.class)))
+                .willAnswer((invocation) -> invocation.getArgument(0));
+
+        ResultActions response = mockMvc.perform(put("/api/employees/{id}", employeeId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateEmployee)));
+
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName",
+                        is(updateEmployee.getFirstName())))
+                .andExpect(jsonPath("$.lastName",
+                        is(updateEmployee.getLastName())))
+                .andExpect(jsonPath("$.email",
+                        is(updateEmployee.getEmail())));
     }
 }
