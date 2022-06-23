@@ -88,6 +88,7 @@ public class EmployeeControllerTests {
                 .lastName("Saisaoad")
                 .email("NaponSaisaoad@gmail.com")
                 .build();
+        employeeRepository.save(employee);
 
         given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
 
