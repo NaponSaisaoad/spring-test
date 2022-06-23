@@ -2,6 +2,7 @@ package net.javaguides.springboottesting.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.javaguides.springboottesting.model.Employee;
+import net.javaguides.springboottesting.repository.EmployeeRepository;
 import net.javaguides.springboottesting.service.EmployeeService;
 
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ public class EmployeeControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockBean
+    private EmployeeRepository employeeRepository;
+
     @Test
     public void givenEmployeeObject_whenCreateEmployee_thenReturnSavedEmployee() throws Exception {
         Employee employee = Employee.builder()
@@ -65,6 +69,7 @@ public class EmployeeControllerTests {
         List<Employee> listOfEmployees = new ArrayList<>();
         listOfEmployees.add(Employee.builder().firstName("Napon").lastName("Saisaoad").email("NaponSaisaoad@gmail.com").build());
         listOfEmployees.add(Employee.builder().firstName("Bunphot").lastName("Saisaoad").email("BunphotSaisaoad@gmail.com").build());
+        employeeRepository.saveAll(listOfEmployees);
 
         given(employeeService.getAllEmployees()).willReturn(listOfEmployees);
 
