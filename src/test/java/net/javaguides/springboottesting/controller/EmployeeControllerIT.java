@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.containers.MySQLContainer;
@@ -33,6 +35,14 @@ public class EmployeeControllerIT {
             .withUsername("username")
             .withPassword("password")
             .withDatabaseName("ems");
+
+    @DynamicPropertySource
+    public static void  dynamicPropertySource(DynamicPropertyRegistry dynamicPropertyRegistry) {
+        dynamicPropertyRegistry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        dynamicPropertyRegistry.add("spring.datasource.username", mySQLContainer::getUsername);
+        dynamicPropertyRegistry.add("spring.datasource.password", mySQLContainer::getPassword);
+
+    }
 
     @Autowired
     private MockMvc mockMvc;
