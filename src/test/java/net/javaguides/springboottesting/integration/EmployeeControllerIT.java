@@ -1,4 +1,4 @@
-package net.javaguides.springboottesting.controller;
+package net.javaguides.springboottesting.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.javaguides.springboottesting.model.Employee;
@@ -28,21 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
-@Testcontainers
-public class EmployeeControllerIT {
-
-    private static MySQLContainer mySQLContainer = new MySQLContainer("mysql:latest")
-            .withUsername("username")
-            .withPassword("password")
-            .withDatabaseName("ems");
-
-    @DynamicPropertySource
-    public static void  dynamicPropertySource(DynamicPropertyRegistry dynamicPropertyRegistry) {
-        dynamicPropertyRegistry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
-        dynamicPropertyRegistry.add("spring.datasource.username", mySQLContainer::getUsername);
-        dynamicPropertyRegistry.add("spring.datasource.password", mySQLContainer::getPassword);
-
-    }
+public class EmployeeControllerIT extends AbstractionBaseTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -59,8 +45,6 @@ public class EmployeeControllerIT {
     @Test
     public void givenEmployeeObject_whenCreateEmployee_thenReturnSavedEmployee() throws Exception {
 
-
-        System.out.println(mySQLContainer.getUsername());
         Employee employee = Employee.builder()
                 .firstName("Napon")
                 .lastName("Saisaoad")
